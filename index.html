@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel N09</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+
+</head>
+<link rel="stylesheet" href="estilo.css">
+<body>
+    <div class="container mt-5">
+        <div id="login" style="display:block">
+            <img src="img/circulo_logo.webp" alt="logo n09">
+            <h2>Iniciar Sesión</h2>
+            <div class="form-group">
+                <label for="email">Usuario:</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <span id="emailError" class="error"></span>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label>¿Olvidaste  tu contraseña?</label>
+                <p><a href="recuperar.html">Recuperar contraseña</a></p>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="iniciarSesion()" >Iniciar</button>
+        </div>
+
+        <div id="formulariocarrusel" style="display: none;">
+            <div class="container">
+                <div class="cabecera">
+                    <img class="logon09" src="img/logo_nueve09.webp" alt="logo nueve09"/>
+                    <h2><span>Anuncios </span>en la plataforma</h2>
+                    <button type="button" class="btn btn-salida" id="regresar"><img src="img/regresar.svg"> Regresar</button>
+                    </div>
+            
+                <form id="miFormulario">
+                    <div class="cabecera2">
+                        <h2><span>Subida </span> para carrusel</h2><br>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo1" class="form-label">Nombre de anuncio(Título):</label>
+                        <input type="text" class="form-control" id="campo1" name="campo1" maxlength="20" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo2" class="form-label">Alias:</label>
+                        <input type="text" class="form-control" id="campo2" name="campo2" maxlength="20" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo7" class="form-label">Posicion(numerica):</label>
+                        <input type="text" class="form-control" id="campo7" name="campo7" maxlength="2" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo4" class="form-label">link del anuncio(pagina web o descripción):</label>
+                        <input type="text" class="form-control" id="campo4" name="campo4" maxlength="25">
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo5" class="form-label">Fecha de inicio:</label>
+                        <input type="datetime-local" class="form-control" id="campo5" name="campo5" min="" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo6" class="form-label">Fecha de termino:</label>
+                        <input type="datetime-local" class="form-control" id="campo6" name="campo6"  required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="enviar">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+
+        <div id="form_img" style="display: none;">
+            <div class="container">
+                <div class="cabecera">
+                    <img class="logon09" src="img/logo_nueve09.webp" alt="logo nueve09"/>
+                    <h2><span>Anuncios </span>en la plataforma</h2>
+                    <button type="button" class="btn btn-salida" id="regresarimg"><img src="img/regresar.svg"> Regresar</button>
+                    </div>
+            
+                <form id="miFormulario">
+                    <div class="cabecera2">
+                        <h2><span>Subida </span> para carrusel</h2><br>
+                    </div>
+                    <div class="mb-3">
+                        <label for="img1" class="form-label">Imagen primaria que mostrara:</label>
+                        <input type="file" class="form-control" id="img1" name="img1" accept="image/*" required> 
+                    </div>
+                    <div class="mb-3">
+                        <label for="img2" class="form-label">Imagen secundaria mostrara:</label>
+                        <input type="file" class="form-control" id="img2" name="img2" accept="image/*" required> 
+                    </div>
+                    <button type="button" class="btn btn-primary" id="enviarimg">Enviar</button>
+                </form>
+            </div>
+        </div>
+
+
+        <div id="formulariocarrusel2" style="display: none;">
+            <div class="container">
+
+                <div class="cabecera">
+                    <img class="logon09" src="img/logo_nueve09.webp" alt="logo nueve09"/>
+                    <h2><span>Anuncios </span>en la plataforma</h2>
+                    <button type="button" class="btn btn-salida" id="regresarf"><img src="img/regresar.svg"> Regresar</button>
+                    </div>
+            
+                <form id="miFormulario2">
+                    <div class="cabecera2">
+                        <h2><span>Modificacion </span> para carrusel</h2><br>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo11" class="form-label">Nombre de anuncio(Título):</label>
+                        <input type="text" class="form-control" id="campo11" name="campo11" maxlength="20" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo22" class="form-label">Alias:</label>
+                        <input type="text" class="form-control" id="campo22" name="campo22" maxlength="20" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo77" class="form-label">Posicion(numerica):</label>
+                        <input type="text" class="form-control" id="campo77" name="campo77" maxlength="2"  required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo44" class="form-label">link del anuncio(pagina web o descripción):</label>
+                        <input type="text" class="form-control" id="campo44" name="campo44" maxlength="25">
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo55" class="form-label">Fecha de inicio:</label>
+                        <input type="datetime-local" class="form-control" id="campo55" name="campo55" min="" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="campo66" class="form-label">Fecha de termino:</label>
+                        <input type="datetime-local" class="form-control" id="campo66" name="campo66" min="" required>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="actualizar">Modificar</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="anuncios" style="display: none;">
+            <div class="cabecera">
+            <img class="logon09" src="img/logo_nueve09.webp" alt="logo nueve09"/>
+            <h2><span>Anuncios </span>en la plataforma</h2>
+            <button type="button" class="btn btn-salida" id="cerrar">Cerrar sesion <img src="img/cerrarsesion.svg" /></button>
+            </div>
+            <div class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+                <table class="table table-bordered table-striped">
+                    <div class="table-responsive">
+                        <table id="tablaDatos" class="table table-bordered table-striped" >
+                            <thead>
+                                <tr>
+                                    <th>Titulo</th>
+                                    <th>alias</th>
+                                    <th>Posicion</th>
+                                    <th>llamada a accion</th>
+                                    <th>ID</th>
+                                    <th>estado</th>
+                                    <th>U_id</th>
+                                    <th>fecha inicio</th>
+                                    <th>fecha final</th>
+                                    <th>Borrar</th>
+                                    <th>Visualizar</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <tbody id="data">
+                    </tbody>
+                    <button type="button" class="btn btn-primary" id="subir">Publicar</button>
+                </table>
+            </div>
+        </div>
+    </div>
+
+        <div id="anuncioid" style="display: none;">
+            <div class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+                <div class="cabecera">
+                    <img class="logon09" src="img/logo_nueve09.webp" alt="logo nueve09"/>
+                    <h2><span>Anuncio </span>N09</h2>
+                    <button type="button" class="btn btn-salida" id="regresar2"><img src="img/regresar.svg"> Regresar</button>
+                    <table class="table table-bordered table-striped">
+                <h2>Anuncio N09</h2>
+                <table id="tablaDatosads" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Titulo</th>
+                            <th>alias</th>
+                            <th>Posicion</th>
+                            <th>llamada a accion</th>
+                            <th>ID</th>
+                            <th>Estado</th>
+                            <th>U_ID</th>
+                            <th>fecha de inicio</th>
+                            <th>fecha final</th>
+                            <th>Borrar</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                        <tbody id="data2">
+                        </tbody>
+                        </tbody>
+                        </table>
+            <button type="button" class="btn btn-primary" id="subir_img">subir img</button>
+            <button type="button" class="btn btn-primary" id="modificar_img">modificar img</button>
+            <button type="button" class="btn btn-primary" id="modificar">modificar inf</button>
+        </table></div>
+        </div>
+    <script src="javascript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- 
+
+                    <div class="mb-3">
+                        <label for="campo3" class="form-label">Link de imagen(imagen que mostrara):</label>
+                        <input type="file" class="form-control" id="campo3" name="campo3" accept="image/*" required> 
+                    </div>
+
+
+ -->
