@@ -508,6 +508,53 @@ document.getElementById("actualizar").addEventListener("click", async function()
 });
 //---------------------------------------------------------------------------------------------------
 
+//------------------modify img----------------------------------------------------
+
+document.getElementById("mod_img").addEventListener("click", async function(){
+    
+    const name = document.getElementById("img1");
+    const alias = document.getElementById("img2");
+    const archivo=name.files[0];
+    const archivo2=alias.files[0];
+
+    const formData = new FormData();
+    formData.append('image', archivo);
+    formData.append('image2', archivo2);
+        try {
+            const token=localStorage.getItem('token');
+            const response = await fetch(url_endpoint+`ads/${identidad}`, {//aqui se debera de poner el id correspondiente
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
+                },
+                body: formData
+            });
+    
+            if (response.ok) {
+                alert("tus imagenes han sido actualizado con exito");
+                document.getElementById("img1").value='';
+                document.getElementById("img2").value='';
+                document.getElementById('form_img_mod').style.display = 'none';
+                document.getElementById('anuncioid').style.display = 'block';
+                
+                refrescar();
+            } else {
+                console.error('Error al actualizar los datos:');
+            }
+        } catch (error) {
+            console.error('Error de red:', error);
+        }
+        
+
+    }
+    );
+//-------------------------------------------------------------------
+
+
+
+
+
 //----------------------------Modificar true false stado-------------------------------------------------------------
 async function cambio_de_estado(id,named,aliasd,start,end,positiond,call,status){
     let boolva=!status;
@@ -532,7 +579,6 @@ async function cambio_de_estado(id,named,aliasd,start,end,positiond,call,status)
                         status:boolva       
         })
     });
-
     if (response.ok) {
         alert("El estado de tu anuncio ha sido actualizado con exito");
         if(document.getElementById('anuncios').style.display =='block' ){
@@ -556,29 +602,33 @@ document.getElementById("subir").addEventListener("click", function() {
     document.getElementById('anuncios').style.display = 'none';
     document.getElementById('formulariocarrusel').style.display = 'block';
     })
-    
 document.getElementById("subir_img").addEventListener("click", function() {
     document.getElementById('anuncioid').style.display = 'none';
     document.getElementById('form_img').style.display = 'block';
     })
-
 document.getElementById("regresar").addEventListener("click", function() {
     document.getElementById('formulariocarrusel').style.display = 'none';
     document.getElementById('anuncios').style.display = 'block';
     })
-    
 document.getElementById("regresar2").addEventListener("click", function() {
     document.getElementById('anuncioid').style.display = 'none';
     document.getElementById('anuncios').style.display = 'block';
     refrescar();
     })
-
 document.getElementById("regresarimg").addEventListener("click", function() {
     document.getElementById('form_img').style.display = 'none';
     document.getElementById('anuncioid').style.display = 'block';
     refrescar();
     })
-
+document.getElementById("modificar_img").addEventListener("click", function() {
+    document.getElementById('anuncioid').style.display = 'none';
+    document.getElementById('form_img_mod').style.display = 'block';
+    })
+document.getElementById("regresarimg_mod").addEventListener("click", function() {
+    document.getElementById('form_img_mod').style.display = 'none';
+    document.getElementById('anuncioid').style.display = 'block';
+    refrescar();
+    })
 document.getElementById("modificar").addEventListener("click", function() {
     //checar si se quiere dejar o no para el autocompletado
      campo11.value=temporal[0];
