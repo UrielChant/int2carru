@@ -114,7 +114,7 @@ async function veranuncio(itemId) {
     const data = await response.json();
     const ads=data.data.ad;
     temporal=[ads.name,ads.alias,ads.position,ads.call_to_action,ads.end_date];
-    console.log(temporal);
+    //console.log(temporal);
     if (response.ok) {
         const tableBody = document.querySelector('#tablaDatosads tbody');
         tableBody.innerHTML = ''; 
@@ -175,7 +175,7 @@ async function veranuncioimg(itemId) {
         });
     const data = await response.json();
     const ads=data.data.ad;
-    console.log(temporal);
+    //console.log(temporal);
     if (response.ok) {
         const tableBody = document.querySelector('#tablaDatosads tbody');
         //tableBody.innerHTML = ''; 
