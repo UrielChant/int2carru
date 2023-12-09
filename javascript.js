@@ -66,7 +66,10 @@ async function refrescar() {
                     row.insertCell(2).textContent = item.position;
                     row.insertCell(3).textContent = item.call_to_action.substring(0,15);
                     row.insertCell(4).textContent = item.id;
-                    row.insertCell(5).textContent = item.status;
+                    const state=document.createElement("button");
+                    state.textContent=item.status;
+                    state.addEventListener("click",()=> cambio_de_estado(item.id,item.name,item.alias,item.start_date,item.end_date,item.position,item.call_to_action,item.status));
+                    row.insertCell(5).appendChild(state);
                     row.insertCell(6).textContent = item.user_id;
                     row.insertCell(7).textContent = item.start_date.substring(0,10);
                     row.insertCell(8).textContent = item.end_date.substring(0,10);
@@ -127,7 +130,10 @@ async function veranuncio(itemId) {
         row2.insertCell(2).textContent = ads.position;
         row2.insertCell(3).textContent = ads.call_to_action;
         row2.insertCell(4).textContent = ads.id;
-        row2.insertCell(5).textContent = ads.status;
+        const state=document.createElement("button");
+        state.textContent=ads.status;
+        state.addEventListener("click",()=> cambio_de_estado(ads.id,ads.name,ads.alias,ads.start_date,ads.end_date,ads.position,ads.call_to_action,ads.status));
+        row2.insertCell(5).appendChild(state);
         row2.insertCell(6).textContent = ads.user_id;
         row2.insertCell(7).textContent = ads.start_date;
         row2.insertCell(8).textContent = ads.end_date;
@@ -350,6 +356,49 @@ document.getElementById("actualizar").addEventListener("click", async function()
 });
 //---------------------------------------------------------------------------------------------------
 
+//----------------------------Modificar true false stado-------------------------------------------------------------
+async function cambio_de_estado(id,named,aliasd,start,end,positiond,call,status){
+    let boolva=!status;
+    try {
+    const token=localStorage.getItem('token');
+    
+    
+
+    const response = await fetch(url_endpoint+`ads/${id}`, {//aqui se debera de poner el id correspondiente
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization':`Bearer ${token}`
+        },
+        body:JSON.stringify ({
+                        name:named,
+                        alias:aliasd,
+                        start_date:start,
+                        end_date:end,
+                        position:positiond,
+                        call_to_action:call,
+                        status:boolva       
+        })
+    });
+
+    if (response.ok) {
+        alert("El estado de tu anuncio ha sido actualizado con exito");
+        if(document.getElementById('anuncios').style.display =='block' ){
+            refrescar();
+        }
+        else{
+            veranuncio(id);
+        }
+    } else {
+        console.error('Error al actualizar los datos:');
+    }
+} catch (error) {
+    console.error('Error de red:', error);
+}
+}
+
+//-------------------------------------------------------------------------------------------------
+
 //-------------------------funciones para trasladarse------------------------------------------------
 document.getElementById("subir").addEventListener("click", function() {
     document.getElementById('anuncios').style.display = 'none';
@@ -364,6 +413,7 @@ document.getElementById("regresar").addEventListener("click", function() {
 document.getElementById("regresar2").addEventListener("click", function() {
     document.getElementById('anuncioid').style.display = 'none';
     document.getElementById('anuncios').style.display = 'block';
+    refrescar();
     })
 
 document.getElementById("modificar").addEventListener("click", function() {
