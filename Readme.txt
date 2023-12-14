@@ -1,0 +1,2 @@
+Este primer codigo de la front page que modifica anuncios del carrusel esta estructurado como una pagina estatica, por lo que se ejecuta
+desde el archivo html denominado como "index.html", como es encuentran ordenados los archivos es como ya se encuentran referenciados en los archivos, por lo que no hay que quitar la carpeta imagenes o generar una carpeta adicional para meter los archivos js o html.

@@ -3,9 +3,8 @@ var temporal="";
 var identidad="";
 //------------------Inicio de sesion url+login------------------------
 async function iniciarSesion() {
-    const email= document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-    
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
     const data = {
         email,
@@ -42,11 +41,9 @@ async function iniciarSesion() {
 
 //------------------getpool de anuncios url+ads--------------------------
 async function refrescar() {
-            //console.log(data1.password);
     try {
         const token=localStorage.getItem('token');
             const response = await fetch(url_endpoint+'ads?page=1&page_size=24', {//  /mobile   <--este faltante de liga me ayuda a entrar a un entorno de prueba/la paginacion debe ser desde aqui para andar subiendo los archivos
-            //ads?page=1&page_size=1
             method: 'GET',
             headers: {
            'Content-Type': 'application/json',
@@ -114,7 +111,6 @@ async function veranuncio(itemId) {
     const data = await response.json();
     const ads=data.data.ad;
     temporal=[ads.name,ads.alias,ads.position,ads.call_to_action,ads.end_date];
-    console.log(temporal);
     if (response.ok) {
         const tableBody = document.querySelector('#tablaDatosads tbody');
         tableBody.innerHTML = ''; 
@@ -123,7 +119,12 @@ async function veranuncio(itemId) {
         row2.insertCell(0).textContent = ads.name;
         row2.insertCell(1).textContent = ads.alias.substring(0,10);
         row2.insertCell(2).textContent = ads.position;
-        row2.insertCell(3).textContent = ads.call_to_action;
+        var enlace = document.createElement("a");
+        enlace.textContent = ads.call_to_action.substring(0,20);
+        enlace.href=ads.call_to_action;
+        enlace.target = '_blank';
+        celdenl=row2.insertCell(3);
+        celdenl.appendChild(enlace);
         row2.insertCell(4).textContent = ads.id;
         const state=document.createElement("button");
         state.textContent=ads.status;
@@ -139,18 +140,51 @@ async function veranuncio(itemId) {
         deleteButton.addEventListener("click", () => confirmacion(ads.id));//aqui se coloca el identificador  para realizar supresion
         row2.insertCell(9).appendChild(deleteButton);
         
-        // var row2 = tableBody.insertRow();
-        // var celdai=row2.insertCell();
-        // celdai.colSpan=10;
+        var row2 = tableBody.insertRow();
+        var celdai=row2.insertCell();
+        celdai.colSpan=10;
+        if(ads.image!==null){
+        var image=new Image();
+        image.src=ads.image;
+        image.style.maxWidth = "1080px"; 
+        image.style.maxHeight = "600px"; 
+        image.style.width = "auto";      
+        image.style.height = "auto";
+        celdai.appendChild(image);
+        const deleteimg = document.createElement("button");
+        deleteimg.textContent = "Eliminar";
+        deleteimg.addEventListener("click", () => confirmacionim1(ads.id));//aqui se coloca el identificador  para realizar supresion
+        celdai.appendChild(deleteimg);
+        }
+        else{
+        var row2 = tableBody.insertRow();
+        var celdai=row2.insertCell();
+        celdai.colSpan=10;
+        celdai.textContent="No hay imagen primaria que mostrar";
+        }
+        if(ads.image2!==null){
+        var row2 = tableBody.insertRow();
+        var celdai=row2.insertCell();
+        celdai.colSpan=10;
         
-        // var image=new Image();
-        // image.src=ads.image;
-        // image.style.maxWidth = "1080px"; 
-        // image.style.maxHeight = "600px"; 
-        // image.style.width = "auto";      
-        // image.style.height = "auto";
-        // celdai.appendChild(image);
-        veranuncioimg(ads.id);
+        var image2=new Image();
+        image2.src=ads.image2;
+        image2.style.maxWidth = "1080px"; 
+        image2.style.maxHeight = "600px"; 
+        image2.style.width = "auto";      
+        image2.style.height = "auto";
+        celdai.appendChild(image2);
+        const deleteimg2 = document.createElement("button");
+        deleteimg2.textContent = "Eliminar";
+        deleteimg2.addEventListener("click", () => confirmacionim2(ads.id));//aqui se coloca el identificador  para realizar supresion
+        celdai.appendChild(deleteimg2);
+        }
+        else{
+        var row2 = tableBody.insertRow();
+        var celdai=row2.insertCell();
+        celdai.colSpan=10;
+        celdai.textContent="No hay imagen secundaria que mostrar";
+        }
 
     } else {
         console.error('Error al obtener los datos:');
@@ -166,7 +200,7 @@ catch (error) {
 async function veranuncioimg(itemId) {
     try {
         const token=localStorage.getItem('token');
-        const response = await fetch(url_endpoint+`ads/${itemId}`, {//?page=2&page_size=1
+        const response = await fetch(url_endpoint+`ads/${itemId}/image/FIRST`, {//?page=2&page_size=1 aqui posiblmente sea otro endpoint
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -175,10 +209,11 @@ async function veranuncioimg(itemId) {
         });
     const data = await response.json();
     const ads=data.data.ad;
-    console.log(temporal);
+    console.log(data,ads);
     if (response.ok) {
         const tableBody = document.querySelector('#tablaDatosads tbody');
         //tableBody.innerHTML = ''; 
+        
         
         
         var row2 = tableBody.insertRow();
@@ -196,6 +231,28 @@ async function veranuncioimg(itemId) {
         deleteButton.textContent = "Eliminar";
         deleteButton.addEventListener("click", () => confirmacionim1(ads.id));//aqui se coloca el identificador  para realizar supresion
         celdai.appendChild(deleteButton);
+    } else {
+        console.error('Error al obtener los datos:');
+    }
+}
+catch (error) {
+    console.error('Error de red:', error);
+}
+
+        try {
+            const token=localStorage.getItem('token');
+            const response = await fetch(url_endpoint+`ads/${itemId}/image/SECONDARY`, {//?page=2&page_size=1 aqui posiblmente sea otro endpoint
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${token}`
+                },
+            });
+        const data = await response.json();
+        const ads=data.data.ad;
+        if (response.ok) {
+            const tableBody = document.querySelector('#tablaDatosads tbody');
+            //tableBody.innerHTML = ''; 
 
         var row2 = tableBody.insertRow();
         var celdai2=row2.insertCell();
@@ -227,93 +284,96 @@ catch (error) {
 //--------------------------------subir imagen---------------------------------------------------
 document.getElementById("enviarimg").addEventListener("click", async function() {
 
-    const image1 = document.getElementById("img1");
-    const image2 = document.getElementById("img2");
-    const archivo=image1.files[0];
-    const archivo2=image2.files[0];
+    const image = document.getElementById('img1');
+    const image2 = document.getElementById('img2');
+    const typimg="FIRST";
+    const typimg2="SECONDARY";
 
-    const formData = new FormData();
-    formData.append('image', archivo);
-    formData.append('image2', archivo2);
-          
-    if((image1!=='')&&(image2!=='')){
-        try{
-            const token=localStorage.getItem('token');
-           const response= await fetch(url_endpoint+'ads', {
-                method: "POST",
-                headers:{
-                    //'Content-Type': 'application/json',
-                    'Authorization':`Bearer ${token}`
-                },
-                body: formData
-            })
-        
-            if (response.ok) {
-                alert('Subida exitosa');
-                image1.value='';
-                image2.value='';
-                document.getElementById('formulariocarrusel').style.display = 'none';
-                document.getElementById('anuncios').style.display = 'block';
-                refrescar();
-              
-            } else {
-                alert('sucedio un problema.');
-            }
+    console.log(typeof image.files[0],typeof image2.files[0],typeof image.files,typeof image2.files);
+        if (((typeof image.files[0])=='object')&&((typeof image2.files[0])=='object')){
+            var formData = new FormData();
+            formData.append('image', image.files[0]);
+            envioimagen(typimg,formData)
+            formData='';
+            formData = new FormData();
+            formData.append('image', image2.files[0]);
+            envioimagen(typimg2,formData)
         }
-            catch(error){
-                console.error("Error:", error);
-            };
-        
-
-    }
-    else if(image1!==''){
-        alert('No procede no hay imagen secundaria por enviar')
-    }
-    else if(image2!==''){
-        alert('No procede no hay imagen primaria por enviar')
-    }
-    
-    else{
-        alert('No procede no hay imagenes para enviar')
-    }
+        else if((typeof image2.files[0])=='object'){
+            const formData = new FormData();
+            formData.append('image', image2.files[0]);
+            envioimagen(typimg2,formData)
+        }
+        else if((typeof image.files[0])=='object'){
+            const formData = new FormData();
+            formData.append('image', image.files[0]);
+            envioimagen(typimg,formData)
+        }
+        else{
+            alert('No hay nada que enviar')
+        }
 });
+
+
+
+async function envioimagen(tipo,formData){
+    try{
+        const token=localStorage.getItem('token');
+       const response= await fetch(url_endpoint+`ads/${identidad}/image/${tipo}`, {//ads/11/SECONDARY  O  FIRST
+            method: "POST",
+            headers:{
+                'Authorization':`Bearer ${token}`
+            },
+            body: formData
+        })
+    
+        if (response.ok) {
+            alert('Subida exitosa');
+            document.getElementById("img1").value='';
+            document.getElementById("img2").value='';
+            document.getElementById('form_img').style.display = 'none';
+            document.getElementById('anuncios').style.display = 'block';
+            refrescar();
+          
+        } else {
+            alert('sucedio un problema.');
+        }
+    }
+        catch(error){
+            console.error("Error:", error);
+        };
+    };
 
 // -------------------------subida de anuncio url+ads--------------------------------------
 document.getElementById("enviar").addEventListener("click", async function() {
 
     const name = document.getElementById("campo1").value;
     const alias = document.getElementById("campo2").value;
-    // const image = document.getElementById("campo3");
     const call_to_action = document.getElementById("campo4").value;
     const start_date = document.getElementById("campo5").value;
     const end_date = document.getElementById("campo6").value;
     const position = document.getElementById("campo7").value;
-    //const archivo=image.files[0];
 
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('alias', alias);
-    formData.append('start_date', start_date);
-    formData.append('end_date', end_date);
-    formData.append('position', position);
-    formData.append('call_to_action', call_to_action);
-   //formData.append('image', archivo);
-          
     if((end_date>start_date)&&(position<25)&&((name!=='')&&(alias!=='')&&(call_to_action!=='')&&(start_date!=='')&&(end_date!=='')&&(position!==''))){
         try{
             const token=localStorage.getItem('token');
            const response= await fetch(url_endpoint+'ads', {
                 method: "POST",
                 headers:{
-                    //'Content-Type': 'application/json',
+                    'Content-Type': 'application/json',
                     'Authorization':`Bearer ${token}`
                 },
-                body: formData
-            })
+                body:JSON.stringify({
+                    "name": name,
+                    "alias": alias,
+                    "start_date": start_date,
+                    "end_date": end_date,
+                    "position": position,
+                    "call_to_action": call_to_action})                
+            }) 
         
             if (response.ok) {
                 alert('Subida exitosa');
-                image.value='';
                 document.getElementById("campo1").value='';
                 document.getElementById("campo2").value='';
                 document.getElementById("campo4").value='';
@@ -385,7 +445,7 @@ catch (error) {
 async function borrarimagen1(itemId) {
     const token=localStorage.getItem('token')
     try {
-        const response = await fetch(url_endpoint+`ads/${itemId}`, {//mapeo distinto para la imagen primaria?
+        const response = await fetch(url_endpoint+`ads/${itemId}/image/FIRST`, {//mapeo distinto para la imagen primaria?
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -395,11 +455,11 @@ async function borrarimagen1(itemId) {
 
     if (response.ok) {
         alert("tu imagen primaria");
-        refrescar();
+        veranuncio(itemId)
 
     } 
     else {
-        console.error('Error al obtener los datos:', data3.error);
+        console.error('Error al obtener los datos:', data.error);
     }
 }
 catch (error) {
@@ -410,7 +470,7 @@ catch (error) {
 async function borrarimagen2(itemId) {
     const token=localStorage.getItem('token')
     try {
-        const response = await fetch(url_endpoint+`ads/${itemId}`, {//mapeo distinto para la imagen secundaria?
+        const response = await fetch(url_endpoint+`ads/${itemId}/image/SECONDARY`, {//mapeo distinto para la imagen secundaria?
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -420,7 +480,7 @@ async function borrarimagen2(itemId) {
 
     if (response.ok) {
         alert("tu imagen secundaria");
-        refrescar();
+        veranuncio(itemId)
 
     } 
     else {
@@ -445,14 +505,6 @@ document.getElementById("actualizar").addEventListener("click", async function()
     const position = document.getElementById("campo77").value;
     let boolva = true;
 
-    // const formData = new FormData();
-    // formData.append('name', name);
-    // formData.append('alias', alias);
-    // formData.append('start_date', start_date);
-    // formData.append('end_date', end_date);
-    // formData.append('position', position);
-    // formData.append('call_to_action', call_to_action);
-
     if((end_date>start_date)&&(position<25)&&((name!=='')&&(alias!=='')&&(call_to_action!=='')&&(start_date!=='')&&(end_date!=='')&&(position!==''))){
         try {
             const token=localStorage.getItem('token');
@@ -470,12 +522,11 @@ document.getElementById("actualizar").addEventListener("click", async function()
                                 position:position,
                                 call_to_action:call_to_action,
                                 status:boolva       
-                })
+                }),
+                
             });
     
             if (response.ok) {
-                //const {status2}= await response.json();
-               // console.log('Datos actualizados:', status2);
                 alert("tu anuncio ha sido actualizado con exito");
                 document.getElementById('formulariocarrusel2').style.display = 'none';
                 document.getElementById('anuncios').style.display = 'block';
@@ -495,7 +546,7 @@ document.getElementById("actualizar").addEventListener("click", async function()
     else if((end_date>start_date)&&((name!=='')&&(alias!=='')&&(call_to_action!=='')&&(start_date!=='')&&(end_date!=='')&&(position!==''))){
         alert('La posicion no debe de rebasar del numero 25')
     }
-    else if(!(((name!=='')&&(alias!=='')&&(image!=='')&&(call_to_action!=='')&&(start_date!=='')&&(end_date!=='')&&(position!=='')))){
+    else if(!(((name!=='')&&(alias!=='')&&(call_to_action!=='')&&(start_date!=='')&&(end_date!=='')&&(position!=='')))){
         alert('Se encuentran todos los campos vacios')
     }
     else if((position<25)&&(end_date>start_date)){
@@ -506,78 +557,17 @@ document.getElementById("actualizar").addEventListener("click", async function()
     }
     
 });
-//---------------------------------------------------------------------------------------------------
-
-//------------------modify img----------------------------------------------------
-
-document.getElementById("mod_img").addEventListener("click", async function(){
-    
-    const name = document.getElementById("img1");
-    const alias = document.getElementById("img2");
-    const archivo=name.files[0];
-    const archivo2=alias.files[0];
-
-    const formData = new FormData();
-    formData.append('image', archivo);
-    formData.append('image2', archivo2);
-        try {
-            const token=localStorage.getItem('token');
-            const response = await fetch(url_endpoint+`ads/${identidad}`, {//aqui se debera de poner el id correspondiente
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization':`Bearer ${token}`
-                },
-                body: formData
-            });
-    
-            if (response.ok) {
-                alert("tus imagenes han sido actualizado con exito");
-                document.getElementById("img1").value='';
-                document.getElementById("img2").value='';
-                document.getElementById('form_img_mod').style.display = 'none';
-                document.getElementById('anuncioid').style.display = 'block';
-                
-                refrescar();
-            } else {
-                console.error('Error al actualizar los datos:');
-            }
-        } catch (error) {
-            console.error('Error de red:', error);
-        }
-        
-
-    }
-    );
-//-------------------------------------------------------------------
-
-
-
-
-
 //----------------------------Modificar true false stado-------------------------------------------------------------
 async function cambio_de_estado(id,named,aliasd,start,end,positiond,call,status){
-    let boolva=!status;
     try {
     const token=localStorage.getItem('token');
-    
-    
-
     const response = await fetch(url_endpoint+`ads/${id}`, {//aqui se debera de poner el id correspondiente
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
             'Authorization':`Bearer ${token}`
         },
-        body:JSON.stringify ({
-                        name:named,
-                        alias:aliasd,
-                        start_date:start,
-                        end_date:end,
-                        position:positiond,
-                        call_to_action:call,
-                        status:boolva       
-        })
+        body:JSON.stringify (data)
     });
     if (response.ok) {
         alert("El estado de tu anuncio ha sido actualizado con exito");
@@ -594,7 +584,6 @@ async function cambio_de_estado(id,named,aliasd,start,end,positiond,call,status)
     console.error('Error de red:', error);
 }
 }
-
 //-------------------------------------------------------------------------------------------------
 
 //-------------------------funciones para trasladarse------------------------------------------------
@@ -620,25 +609,11 @@ document.getElementById("regresarimg").addEventListener("click", function() {
     document.getElementById('anuncioid').style.display = 'block';
     refrescar();
     })
-document.getElementById("modificar_img").addEventListener("click", function() {
-    document.getElementById('anuncioid').style.display = 'none';
-    document.getElementById('form_img_mod').style.display = 'block';
-    })
-document.getElementById("regresarimg_mod").addEventListener("click", function() {
-    document.getElementById('form_img_mod').style.display = 'none';
-    document.getElementById('anuncioid').style.display = 'block';
-    refrescar();
-    })
 document.getElementById("modificar").addEventListener("click", function() {
-    //checar si se quiere dejar o no para el autocompletado
      campo11.value=temporal[0];
      campo22.value=temporal[1];
      campo77.value=temporal[2];
      campo44.value=temporal[3];
-     //campo66.value=temporal[4];
-     //var fechaini=temporal[4]
-     //document.getElementById('campo55').value=fecha;
-
     document.getElementById('anuncioid').style.display = 'none';
     document.getElementById('formulariocarrusel2').style.display = 'block';
     })
@@ -726,14 +701,10 @@ document.getElementById('login').addEventListener('button', function(e) {
 //---------------------------------------------------------------------------------------
 function confirmacion(identificacion){
 var confirmacion = confirm('¿Estás seguro de que deseas realizar esta acción?');
-
-            // Verificar si se confirmó la acción
             if (confirmacion) {
                 borraranuncio(identificacion);
                 alert('Acción realizada');
-                // Código para la acción
             } else {
-                // Si el usuario cancela, no se realizará ninguna acción
                 alert('Acción cancelada');
             }
         };
@@ -741,27 +712,20 @@ var confirmacion = confirm('¿Estás seguro de que deseas realizar esta acción?
 function confirmacionim1(identificacion){
 var confirmacion = confirm('¿Estás seguro de que deseas realizar esta acción?');
             
-            // Verificar si se confirmó la acción
             if (confirmacion) {
                 borrarimagen1(identificacion);
                 alert('Acción realizada');
-                            // Código para la acción
             } else {
-                            // Si el usuario cancela, no se realizará ninguna acción
             alert('Acción cancelada');
             }
         };
 
 function confirmacionim2(identificacion){
 var confirmacion = confirm('¿Estás seguro de que deseas realizar esta acción?');
-                        
-                        // Verificar si se confirmó la acción
             if (confirmacion) {
                 borrarimagen2(identificacion);
                 alert('Acción realizada');
-                                        // Código para la acción
             } else {
-                                        // Si el usuario cancela, no se realizará ninguna acción
             alert('Acción cancelada');
             }
             };
